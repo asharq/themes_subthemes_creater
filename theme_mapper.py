@@ -4,25 +4,16 @@ import logging
 
 logging.basicConfig(level=logging.INFO)
 
-def create_theme_form(index):
-    with st.form(key=f'theme_form_{index}'):
-        theme = st.text_input(f"Theme {index+1}")
-        intents = st.multiselect(f"Intents {index+1}", options=["Product Issue", "Positive Aspect"])
-        subthemes = st.text_area(f"Subthemes {index+1}", height=200)
-        subthemes_list = [s.strip() for s in subthemes.split("\n") if s.strip()]
-        submit = st.form_submit_button("Save Changes")
-
-        if submit:
-            if theme.strip():
-                logging.info(f"Added theme: {theme}")
-                return {
-                    "theme": theme,
-                    "intents": intents,
-                    "subthemes": subthemes_list
-                }
-            else:
-                st.error("Please enter a theme.")
-    return None
+def create_theme_form():
+    theme = st.text_input("Theme")
+    intents = st.multiselect("Intents", options=["Product Issue", "Positive Aspect"])
+    subthemes = st.text_area("Subthemes", height=200)
+    subthemes_list = [s.strip() for s in subthemes.split("\n") if s.strip()]
+    return {
+        "theme": theme,
+        "intents": intents,
+        "subthemes": subthemes_list
+    }
 
 def main():
     st.title("Theme and Subtheme Creator")
@@ -30,14 +21,10 @@ def main():
 
     themes_and_subthemes = []
 
-    num_themes = st.number_input("Number of Themes", min_value=1, max_value=40, value=5, step=1)
+    for _ in range(st.number_input("Number of Themes", min_value=1, max_value=40, value=5, step=1)):
+        themes_and_subthemes.append(create_theme_form())
 
-    for i in range(int(num_themes)):
-        new_theme = create_theme_form(i)
-        if new_theme:
-            themes_and_subthemes.append(new_theme)
-
-    if themes_and_subthemes:
+    if st.button("Save Changes"):
         st.subheader("JSON Preview")
         json_data = json.dumps(themes_and_subthemes, indent=4)
         st.code(json_data)
@@ -50,7 +37,7 @@ def main():
         ):
             st.success("JSON file downloaded successfully!")
     else:
-        st.warning("Please add at least one theme before downloading the JSON file.")
+        st.warning("Please add at least one theme before saving changes.")
 
 if __name__ == "__main__":
     main()
