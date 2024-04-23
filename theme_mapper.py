@@ -1,5 +1,8 @@
 import streamlit as st
 import json
+import logging
+
+logging.basicConfig(level=logging.INFO)
 
 def create_theme_form(index):
     with st.form(key=f'theme_form_{index}'):
@@ -10,11 +13,18 @@ def create_theme_form(index):
         submit = st.form_submit_button(f"Add Theme {index+1}")
 
         if submit:
-            return {
-                "theme": theme,
-                "intents": intents,
-                "subthemes": subthemes_list
-            }
+            if theme.strip():
+                logging.info(f"Added theme: {theme}")
+                return {
+                    "theme": theme,
+                    "intents": intents,
+                    "subthemes": subthemes_list
+                }
+            else:
+                st.error("Please enter a theme.")
+
+        for subtheme in subthemes_list:
+            st.chip
     return None
 
 def main():
