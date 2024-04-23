@@ -31,13 +31,16 @@ def main():
             themes_and_subthemes.append(new_theme)
 
     if st.button("Download JSON"):
-        json_data = json.dumps(themes_and_subthemes, indent=4)
-        st.download_button(
-            label="Download JSON",
-            data=json_data,
-            file_name="themes_and_subthemes.json",
-            mime="application/json",
-        )
+        if themes_and_subthemes:
+            json_data = json.dumps(themes_and_subthemes, indent=4)
+            st.download_button(
+                label="Download JSON",
+                data=json_data,
+                file_name="themes_and_subthemes.json",
+                mime="application/json",
+            )
+        else:
+            st.warning("Please add at least one theme before downloading the JSON file.")
 
 if __name__ == "__main__":
     main()
