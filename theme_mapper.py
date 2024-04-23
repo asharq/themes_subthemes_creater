@@ -10,7 +10,7 @@ def create_theme_form(index):
         intents = st.multiselect(f"Intents {index+1}", options=["Product Issue", "Positive Aspect"])
         subthemes = st.text_area(f"Subthemes {index+1}", height=200)
         subthemes_list = [s.strip() for s in subthemes.split("\n") if s.strip()]
-        submit = st.form_submit_button(f"Add Theme {index+1}")
+        submit = st.form_submit_button("Save Changes")
 
         if submit:
             if theme.strip():
@@ -22,9 +22,6 @@ def create_theme_form(index):
                 }
             else:
                 st.error("Please enter a theme.")
-
-        for subtheme in subthemes_list:
-            st.chip
     return None
 
 def main():
@@ -40,9 +37,13 @@ def main():
         if new_theme:
             themes_and_subthemes.append(new_theme)
 
+    if themes_and_subthemes:
+        st.subheader("JSON Preview")
+        json_data = json.dumps(themes_and_subthemes, indent=4)
+        st.code(json_data)
+
     if st.button("Download JSON"):
         if themes_and_subthemes:
-            json_data = json.dumps(themes_and_subthemes, indent=4)
             st.download_button(
                 label="Download JSON",
                 data=json_data,
