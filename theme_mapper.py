@@ -21,14 +21,13 @@ def main():
 
     themes_and_subthemes = []
 
-    with st.form("theme_and_subtheme_form"):
-        num_themes = st.number_input("Number of Themes", min_value=1, max_value=40, value=5, step=1)
-        for _ in range(int(num_themes)):
-            themes_and_subthemes.append(create_theme_form())
+    num_themes = st.number_input("Number of Themes", min_value=1, max_value=40, value=5, step=1)
 
-        submit = st.form_submit_button("Save Changes")
+    for _ in range(int(num_themes)):
+        new_theme = create_theme_form()
+        themes_and_subthemes.append(new_theme)
 
-    if submit:
+    if st.button("Save Changes"):
         st.subheader("JSON Preview")
         json_data = json.dumps(themes_and_subthemes, indent=4)
         st.code(json_data)
