@@ -21,7 +21,7 @@ def create_theme_form(index):
                     "subthemes": subthemes_list
                 }
             else:
-                st.error("Please enter a theme.")
+                st.error(f"Please enter a theme for Theme {index+1}.")
     return None
 
 def main():
@@ -37,20 +37,22 @@ def main():
         if new_theme:
             themes_and_subthemes.append(new_theme)
 
+    if st.button("Save Changes"):
+        if themes_and_subthemes:
+            json_data = json.dumps(themes_and_subthemes, indent=4)
+            if st.download_button(
+                label="Download JSON",
+                data=json_data,
+                file_name="themes_and_subthemes.json",
+                mime="application/json",
+            ):
+                st.success("JSON file downloaded successfully!")
+        else:
+            st.warning("Please add at least one theme before downloading the JSON file.")
+
     if themes_and_subthemes:
         st.subheader("JSON Preview")
-        json_data = json.dumps(themes_and_subthemes, indent=4)
-        st.code(json_data)
-
-        if st.download_button(
-            label="Download JSON",
-            data=json_data,
-            file_name="themes_and_subthemes.json",
-            mime="application/json",
-        ):
-            st.success("JSON file downloaded successfully!")
-    else:
-        st.warning("Please add at least one theme before downloading the JSON file.")
+        st.code(json.dumps(themes_and_subthemes, indent=4))
 
 if __name__ == "__main__":
     main()
