@@ -10,19 +10,13 @@ def create_theme_form(index):
         intents = st.multiselect(f"Intents {index+1}", options=["Product Issue", "Positive Aspect"])
         subthemes = st.text_area(f"Subthemes {index+1}", height=200)
         subthemes_list = [s.strip() for s in subthemes.split("\n") if s.strip()]
-        submit = st.form_submit_button("Save Changes")
+        # No "Save Changes" button here
 
-        if submit:
-            if theme.strip():
-                logging.info(f"Added theme: {theme}")
-                return {
-                    "theme": theme,
-                    "intents": intents,
-                    "subthemes": subthemes_list
-                }
-            else:
-                st.error("Please enter a theme.")
-    return None
+    return {
+        "theme": theme,
+        "intents": intents,
+        "subthemes": subthemes_list
+    }
 
 def main():
     st.title("Theme and Subtheme Creator")
@@ -34,8 +28,10 @@ def main():
 
     for i in range(int(num_themes)):
         new_theme = create_theme_form(i)
-        if new_theme:
+        if new_theme["theme"].strip():
             themes_and_subthemes.append(new_theme)
+        else:
+            st.error(f"Please enter a theme for Theme {i+1}.")
 
     if themes_and_subthemes:
         st.subheader("JSON Preview")
