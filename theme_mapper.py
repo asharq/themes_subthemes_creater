@@ -4,7 +4,7 @@ import logging
 
 logging.basicConfig(level=logging.INFO)
 
-def create_theme_form(index, themes_and_subthemes):
+def create_theme_form(index):
     with st.form(key=f'theme_form_{index}'):
         theme = st.text_input(f"Theme {index+1}")
         intents = st.multiselect(f"Intents {index+1}", options=["Product Issue", "Positive Aspect"])
@@ -15,15 +15,14 @@ def create_theme_form(index, themes_and_subthemes):
         if submit:
             if theme.strip():
                 logging.info(f"Added theme: {theme}")
-                themes_and_subthemes.append({
+                return {
                     "theme": theme,
                     "intents": intents,
                     "subthemes": subthemes_list
-                })
-                return themes_and_subthemes
+                }
             else:
                 st.error("Please enter a theme.")
-    return themes_and_subthemes
+    return None
 
 def main():
     st.title("Theme and Subtheme Creator")
@@ -34,7 +33,9 @@ def main():
     num_themes = st.number_input("Number of Themes", min_value=1, max_value=40, value=5, step=1)
 
     for i in range(int(num_themes)):
-        themes_and_subthemes = create_theme_form(i, themes_and_subthemes)
+        new_theme = create_theme_form(i)
+        if new_theme:
+            themes_and_subthemes.append(new_theme)
 
     if themes_and_subthemes:
         st.subheader("JSON Preview")
